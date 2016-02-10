@@ -21,7 +21,7 @@ def confidence_interval(y1, y2, M1, M2, z):
     """Return lower and upper bounds of confidence interval.
     All input values must be of float type.
     """
-    z = poisson.ppf(0.95, y1 / y2, y1 + y2)
+    z = poisson.ppf(0.025, y1 / y2, y1 + y2)
     print z
     y12 = y1 + y2
     a1 = y1 / y12 + z**2 / (2 * y12)
