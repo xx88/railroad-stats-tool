@@ -1,31 +1,45 @@
-from math import sqrt
-from scipy.stats import poisson
+from math import sqrt, exp
+from scipy.stats import norm, f
 
-def run_model(data, z=1.96):
+def calculate(data, interval='wald', alpha=0.05):
     """Return point estimation, lower and upper bounds.
     Input a list of values: y1, y2, M1, M2.
     """
     data = [float(i) for i in data]
     y1, y2, M1, M2 = data
-    p1 = point_estimate(y1, y2, M1, M2)
-    lb, ub = confidence_interval(y1, y2, M1, M2, z)
-    return (p1, lb, ub)
+    pe = point_estimate(y1, y2, M1, M2)
+    interval_func = {
+        'wald': wald_interval,
+        'wilson': wilson_interval,
+        'approx2': approx2_interval,
+        'exact': exact_interval,
+    }
+    lb, ub = interval_func[interval](y1, y2, M1, M2, alpha)
+    return (pe, lb, ub)
 
 def point_estimate(y1, y2, M1, M2):
     """Return point estimation for ratio.
-    All input values must be of float type.
+    Note: All input values must be of float type.
     """
     return y1 * M2 / (y2 * M1)
 
-def confidence_interval(y1, y2, M1, M2, z):
-    """Return lower and upper bounds of confidence interval.
-    All input values must be of float type.
+def wald_interval(y1, y2, M1, M2, alpha):
+    """Return Wald and likelihood based confidence interval.
+    Note: All input values must be of float type.
     """
-    z = poisson.ppf(0.025, y1 / y2, y1 + y2)
-    print z
+    z = norm.ppf(1.0 - alpha / 2)
+    lb = y1 / y2 * exp(-z * sqrt(1 / y1 + 1 / y2)) * M2 / M1
+    ub = y1 / y2 * exp(z * sqrt(1 / y1 + 1 / y2)) * M2 / M1
+    return (lb, ub)
+
+def wilson_interval(y1, y2, M1, M2, alpha):
+    """Return lower and upper bounds of Wilson interval.
+    Note: All input values must be of float type.
+    """
+    z = norm.ppf(1.0 - alpha / 2)
     y12 = y1 + y2
     a1 = y1 / y12 + z**2 / (2 * y12)
-    a2 = z * sqrt((y1 * y2 / y12 + z**2 / (4 * y12)) / y12)
+    a2 = z * sqrt((y1 * y2 / y12**2 + z**2 / (4 * y12)) / y12)
     a3 = 1 + z**2 / y12
     a4 = (a1 - a2) / a3 
     a5 = (a1 + a2) / a3 
@@ -33,13 +47,40 @@ def confidence_interval(y1, y2, M1, M2, z):
     ub = a5 * M2 / ((1 - a5) * M1)
     return (lb, ub)
 
+def approx2_interval(y1, y2, M1, M2, alpha):
+    """Return confidence interval approximate to 2.  Note: All input values must be of float type.  """
+    z = norm.ppf(1.0 - alpha / 2)
+    n = y1 + y2 + 4
+    pi_hat = (y1 + 2) / n
+    lb_pi = pi_hat - z * sqrt(pi_hat * (1 - pi_hat) / n)
+    ub_pi = pi_hat + z * sqrt(pi_hat * (1 - pi_hat) / n)
+    lb = lb_pi / (1 - lb_pi) * M2 / M1;
+    ub = ub_pi / (1 - ub_pi) * M2 / M1;
+    return (lb, ub)
+
+def exact_interval(y1, y2, M1, M2, alpha):
+    """Return exact bound.
+    Note: All input values must be of float type.
+    """
+    n = y1 + y2
+    df11 = 2 * (n - y1 + 1)
+    df12 = 2 * y1
+    df21 = 2 * (y1 + 1)
+    df22 = 2 * (n - y1)
+    f_alpha_over_two = f.ppf(1 - alpha / 2, df11, df12)
+    lb_pi = y1 / (y1 + (n - y1 + 1) * f_alpha_over_two)
+    ub_pi = 1 - (n - y1) / (n - y1 + (y1 + 1) * f_alpha_over_two)
+    lb = lb_pi / (1 - lb_pi) * M2 / M1
+    ub = ub_pi / (1 - ub_pi) * M2 / M1
+    return (lb, ub)
+
 def main():
-    print 
     data = [
-        (19, 29, 1372, 2499)        
+        #(19, 29, 1372, 2499),
+        (98, 122, 6595223, 13688136)        
     ]
     for d in data:
-        print run_model(d)
+        print calculate(d, 'exact')
 
 if __name__ == '__main__':
     main()
