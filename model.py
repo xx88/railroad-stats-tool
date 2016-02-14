@@ -1,21 +1,30 @@
 from math import sqrt, exp
 from scipy.stats import norm, f
 
-def calculate(data, interval='wald', alpha=0.05):
+
+def run_model(data_list, alpha=0.05):
     """Return point estimation, lower and upper bounds.
     Input a list of values: y1, y2, M1, M2.
     """
-    data = [float(i) for i in data]
-    y1, y2, M1, M2 = data
-    pe = point_estimate(y1, y2, M1, M2)
-    interval_func = {
+    if type(data_list[0]) is not list and type(data_list[0]) is not tuple:
+        data_list = [data_list]
+    intervals = {
         'wald': wald_interval,
         'wilson': wilson_interval,
         'approx2': approx2_interval,
         'exact': exact_interval,
     }
-    lb, ub = interval_func[interval](y1, y2, M1, M2, alpha)
-    return (pe, lb, ub)
+    results = []
+    for data in data_list:
+        data = [float(i) for i in data]
+        y1, y2, M1, M2 = data
+        result = {}
+        for func in intervals:
+            pe = point_estimate(y1, y2, M1, M2)
+            lb, ub = intervals[func](y1, y2, M1, M2, alpha)
+            result[func] = (pe, lb, ub)
+        results.append(result)
+    return results
 
 def point_estimate(y1, y2, M1, M2):
     """Return point estimation for ratio.
@@ -48,7 +57,8 @@ def wilson_interval(y1, y2, M1, M2, alpha):
     return (lb, ub)
 
 def approx2_interval(y1, y2, M1, M2, alpha):
-    """Return confidence interval approximate to 2.  Note: All input values must be of float type.  """
+    """Return confidence interval approximate to 2.  
+    Note: All input values must be of float type.  """
     z = norm.ppf(1.0 - alpha / 2)
     n = y1 + y2 + 4
     pi_hat = (y1 + 2) / n
@@ -76,11 +86,10 @@ def exact_interval(y1, y2, M1, M2, alpha):
 
 def main():
     data = [
-        #(19, 29, 1372, 2499),
+        (19, 29, 1372, 2499),
         (98, 122, 6595223, 13688136)        
     ]
-    for d in data:
-        print calculate(d, 'exact')
+    print run_model(data)
 
 if __name__ == '__main__':
     main()
