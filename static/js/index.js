@@ -47,7 +47,7 @@ function validate(data) {
     msg: ""
   };
   for(var i=0;i<data.length;++i) {
-    var nNaN = [], nMiss = [], nCorrect = 0;
+    var nNaN = [], nMiss = [], nMinus = [], nCorrect = 0;
     for(var j=0;j<data[i].length;++j) {
       if(j == 0) {
          if(data[i][j].length == 0) data[i][j] = "L" + String(i+1);
@@ -58,9 +58,13 @@ function validate(data) {
         nMiss.push([i, j]);
         continue;
       }
-      data[i][j] = parseFloat(data[i][j]);
       if(isNaN(data[i][j])) {
         nNaN.push([i, j]);
+        continue;
+      }
+      data[i][j] = parseFloat(data[i][j]);
+      if(data[i][j] <= 0) {
+        nMinus.push([i, j]);
         continue;
       }
       ++nCorrect;
@@ -76,6 +80,11 @@ function validate(data) {
     if(nMiss.length > 0) {
       result.error = nMiss;
       result.msg = "Data is missing!";
+      return result;
+    }
+    if(nMinus.length > 0) {
+      result.error = nMinus;
+      result.msg = "Data must be postive!";
       return result;
     }
     if(nCorrect < 4) {
