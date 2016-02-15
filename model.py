@@ -16,13 +16,14 @@ def run_model(data_list, alpha=0.05):
     }
     results = []
     for data in data_list:
-        data = [float(i) for i in data]
+        index = data[0]
+        data = [float(i) for i in data[1:]]
         y1, y2, M1, M2 = data
         result = {}
         for func in intervals:
             pe = point_estimate(y1, y2, M1, M2)
             lb, ub = intervals[func](y1, y2, M1, M2, alpha)
-            result[func] = (pe, lb, ub)
+            result[func] = (index, pe, lb, ub)
         results.append(result)
     return results
 
