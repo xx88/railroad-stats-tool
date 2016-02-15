@@ -16,7 +16,7 @@
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="static/js/index.js"></script>
 </head>
-<body ng-controller="ToolCtrl">
+<body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -26,7 +26,7 @@
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <li class="active">
-          <a href="index.html">Home</a>
+          <a href="">Home</a>
         </li>
       </ul>
     </div> <!-- /.collapse.navbar-collapse -->
@@ -34,47 +34,63 @@
 </nav>
 
 <div class="container">
-  <div class="panel panel-primary">
+  <div class="panel panel-primary box-shadow-6dp">
     <div class="panel-heading">Railway Statistical Tool</div>
     <div class="panel-body">
-      <label>Input data manually:</label>
-      <table id="tbl-data" class="table table-bordered">
-        <tbody>
-          <tr>
-            <th width="100">Index</th>
-            <th>Y1</th>
-            <th>Y2</th>
-            <th>M1</th>
-            <th>M2</th>
-          </tr>
-          <tr>
-            <td><span contenteditable></span></td>
-            <td><span contenteditable></span></td>
-            <td><span contenteditable></span></td>
-            <td><span contenteditable></span></td>
-            <td><span contenteditable></span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="form-inline">
-        <input id="txt-rows" type="number" class="form-control" value="1" min="1" max="10" />
-          <button id="btn-addrow" class="btn btn-success">Add Row</button>
-          <button id="btn-submit" class="btn btn-primary">Submit</button>
-        </div>
-      </div>
-      <!--
-      <div class="col-md-4">
-        <label>Upload data of CSV format:</label>
-        <form id="form-upload" class="form-inline" method="post" action="estimate_csv">
-          <div class="form-group">
-            <label for="exampleInputFile">File input</label>
-            <input type="file" name="data_csv">
-            <p class="help-block">Upload CSV file to do estimation</p>
+      <div class="row">
+        <div class="col-md-8">
+          <label>Input Data Table:</label>
+          <table id="tbl-data" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th width="80">Label</th>
+                <th>Y1</th>
+                <th>Y2</th>
+                <th>M1</th>
+                <th>M2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+              </tr>
+              <tr>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+              </tr>
+              <tr>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+                <td><span contenteditable></span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-inline">
+            <input id="txt-rows" type="number" class="form-control" value="1" min="1" max="10" />
+            <button id="btn-addrow" class="btn btn-success">Add Row</button>
+            <button id="btn-example-table" class="btn btn-warning">Example</button>
+            <button id="btn-cal-table" class="btn btn-primary right">Calculate</button>
           </div>
-        </form>
-        <button id="btn-upload" class="btn btn-primary">Upload</button>
-      </div>
-      -->
+        </div> <!-- /.col-md-8 -->
+        <div class="col-md-4">
+          <label>CSV Format:</label>
+          <span style="padding:auto auto 5px 5px;font-size:14px;">Label,Y1,Y2,M1,M2</span>
+          <textarea id="text-data" class="form-control"></textarea>
+          <div class="form-inline">
+            <button id="btn-example-csv" class="btn btn-warning">Example</button>
+            <button id="btn-cal-csv" class="btn btn-primary right">Calculate</button>
+          </div>
+        </div>
+      </div> <!-- /.row -->
       <hr>
       <div class="form-inline">
         <label>Choose Interval Type:</label>
@@ -86,8 +102,8 @@
         </select>
       </div>
       <div id="div-chart"></div>
-    </div>
-  </div>
-</div>
+    </div> <!-- /.panel-body -->
+  </div> <!-- /.panel -->
+</div> <!-- /.container -->
 
 </body>
