@@ -1,6 +1,6 @@
 $(function() {
 
-var dataTable = "#tbl-data";
+var dataTable = "#tbl-data tbody";
 var calTableBtn = "#btn-cal-table";
 var calCsvBtn = "#btn-cal-csv";
 var addRowBtn = "#btn-addrow";
@@ -8,6 +8,7 @@ var exampleTableBtn = "#btn-example-table";
 var exampleCsvBtn = "#btn-example-csv";
 var dataText = "#text-data";
 var intervalSelect = "#sel-interval";
+var resultTable = "#tbl-result tbody";
 var chartData = {
   "wald": [],
   "wilson": [],
@@ -33,11 +34,11 @@ function rand(low, high) {
 }
 
 function getRow(r) {
-  return $(dataTable + " tbody tr:eq({0})".format(r));
+  return $(dataTable + " tr:eq({0})".format(r));
 }
 
 function getCell(r, c) {
-  return $(dataTable + " tbody tr:eq({0}) td:eq({1})".format(r, c));
+  return $(dataTable + " tr:eq({0}) td:eq({1})".format(r, c));
 }
 
 function validate(data) {
@@ -97,6 +98,20 @@ function validate(data) {
   return result;
 }
 
+function fillResult(dataType) {
+  var rows = [];
+  for(var i=0;i<chartData[dataType].length;++i) {
+    var tmp = "<tr>";
+    tmp += "<td>" + chartData[dataType][i][0] + "</td>";
+    for(var j=1;j<4;++j) {
+      tmp += "<td>" + chartData[dataType][i][j].toFixed(4) + "</td>";
+    }
+    tmp += "</tr>";
+    rows.push(tmp);
+  }
+  $(resultTable).html(rows.join(''));
+}
+
 function drawChart(dataType) {
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'x');
@@ -113,10 +128,11 @@ function drawChart(dataType) {
     title: "Estimate of " + dataType + " interval",
     curveType: 'function',
     series: [{'color': '#D9544C'}],
-    intervals: { style: 'bars' },
+    intervals: { 'style': 'bars' },
     legend: 'none',
-    width: 960,
-    height: 500
+    chartArea: {'width': '80%', 'height': '80%'},
+    hAxis: { title: 'Labels' },
+    vAxis: { title: 'Estimated Values' }
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('div-chart'));
@@ -154,7 +170,9 @@ function calculate(data) {
         chartData[j].push(data[i][j]);
       }
     }
-    drawChart($(intervalSelect).val());
+    var dataType = $(intervalSelect).val();
+    fillResult(dataType);
+    drawChart(dataType);
   });
 }
 
@@ -164,8 +182,8 @@ function calculate(data) {
 
 $(calTableBtn).click(function() {
   var data = [];
-  $(dataTable + " tbody td").removeClass(errClass);
-  $(dataTable + " tbody tr").each(function(i) {
+  $(dataTable + " td").removeClass(errClass);
+  $(dataTable + " tr").each(function(i) {
     var tmp = [];
     $(this).find("span").each(function(j) {
       tmp.push($(this).text());
@@ -188,7 +206,7 @@ $(addRowBtn).click(function() {
   var n = parseInt($('#txt-rows').val());
   if(isNaN(n) || n <= 0) n = 1;
   while(n-- > 0) {
-    $("#tbl-data tbody").append([
+    $(dataTable).append([
       "<tr>",
       "<td><span contenteditable></span></td>",
       "<td><span contenteditable></span></td>",
@@ -200,12 +218,14 @@ $(addRowBtn).click(function() {
 });
 
 $(intervalSelect).change(function() {
-  drawChart($(this).val());
+  var dataType = $(this).val();
+  fillResult(dataType);
+  drawChart(dataType);
 });
 
 $(exampleTableBtn).click(function() {
-  $(dataTable + " tbody td").removeClass(errClass);
-  var rows = $(dataTable + " tbody tr").length;
+  $(dataTable + " td").removeClass(errClass);
+  var rows = $(dataTable + " tr").length;
   var data = sample(rows);
   for(var i=0;i<rows;++i) {
     for(var j=0;j<5;++j) {

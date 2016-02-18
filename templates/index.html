@@ -92,16 +92,32 @@
         </div>
       </div> <!-- /.row -->
       <hr>
-      <div class="form-inline">
-        <label>Choose Interval Type:</label>
-        <select id="sel-interval" class="form-control">
-          <option value="wald">Wald Interval</option>
-          <option value="wilson">Wilson Interval</option>
-          <option value="approx2">Approximate to 2</option>
-          <option value="exact">Exact Bound</option>
-        </select>
-      </div>
-      <div id="div-chart"></div>
+      <div class="row">
+        <div class="form-inline center">
+          <label>Choose Interval Type:</label>
+          <select id="sel-interval" class="form-control">
+            <option value="wald">Wald Interval</option>
+            <option value="wilson">Wilson Interval</option>
+            <option value="approx2">Approximate to 2</option>
+            <option value="exact">Exact Bound</option>
+          </select>
+        </div>
+      </div> <!-- /.row -->
+      <div class="row">
+        <table id="tbl-result" class="table table-bordered center">
+          <thead>
+            <th width=80>Label</th>
+            <th>Point Estimate</th>
+            <th>Lower Bound</th>
+            <th>Upper Bound</th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div> <!-- /.row -->
+      <div class="row">
+        <div id="div-chart" class="center"></div>
+      </div> <!-- /.row -->
     </div> <!-- /.panel-body -->
   </div> <!-- /.panel -->
 </div> <!-- /.container -->
