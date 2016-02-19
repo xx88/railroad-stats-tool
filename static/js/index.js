@@ -103,7 +103,7 @@ function fillResult(dataType) {
   for(var i=0;i<chartData[dataType].length;++i) {
     var tmp = "<tr>";
     tmp += "<td>" + chartData[dataType][i][0] + "</td>";
-    for(var j=1;j<4;++j) {
+    for(var j=2;j<5;++j) {
       tmp += "<td>" + chartData[dataType][i][j].toFixed(4) + "</td>";
     }
     tmp += "</tr>";
@@ -115,7 +115,8 @@ function fillResult(dataType) {
 function drawChart(dataType) {
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'x');
-  data.addColumn('number', 'values');
+  data.addColumn('number', 'Baseline');
+  data.addColumn('number', 'Estimate');
   data.addColumn({id:'lb', type:'number', role:'interval'});
   data.addColumn({id:'ub', type:'number', role:'interval'});
   if(chartData[dataType].length == 0) {
@@ -127,12 +128,12 @@ function drawChart(dataType) {
   var options= {
     title: "Estimate of " + dataType + " interval",
     curveType: 'function',
-    series: [{'color': '#D9544C'}],
-    intervals: { 'style': 'bars' },
-    legend: 'none',
-    chartArea: {'width': '80%', 'height': '80%'},
+    intervals: { style: 'bars' },
+    legend: { position: 'bottom' },
+    pointSize: 8,
+    chartArea: { width : '80%', height: '80%' },
     hAxis: { title: 'Labels' },
-    vAxis: { title: 'Estimated Values' }
+    vAxis: { title: 'Estimated Values', minValue: 0 }
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('div-chart'));
@@ -167,7 +168,8 @@ function calculate(data) {
     chartData["exact"] = [];
     for(var i=0;i<data.length;++i) {
       for(var j in data[i]) {
-        chartData[j].push(data[i][j]);
+        var tmp = [data[i][j][0], 1, data[i][j][1], data[i][j][2], data[i][j][3]];
+        chartData[j].push(tmp);
       }
     }
     var dataType = $(intervalSelect).val();
