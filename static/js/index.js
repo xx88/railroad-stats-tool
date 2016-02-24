@@ -130,7 +130,10 @@ function drawChart(dataType) {
     curveType: 'function',
     intervals: { style: 'bars' },
     legend: { position: 'bottom' },
-    pointSize: 8,
+    series: {
+      0: { type: 'steppedArea', areaOpacity: 0, lineDashStyle: [10, 2] },
+      1: { pointSize: 8 }
+    },
     chartArea: { width : '80%', height: '80%' },
     hAxis: { title: 'Labels' },
     vAxis: { title: 'Estimated Values', minValue: 0 }
