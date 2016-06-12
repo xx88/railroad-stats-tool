@@ -134,7 +134,7 @@ function drawChart(dataType) {
       0: { type: 'steppedArea', areaOpacity: 0, lineDashStyle: [10, 2], tooltip : false  },
       1: { pointSize: 8 }
     },
-    chartArea: { width : '80%', height: '80%' },
+    chartArea: { width : '95%', height: '80%' },
     hAxis: { title: 'Labels' },
     vAxis: { title: 'Ratio of Accident Rates', minValue: 0 }
   };
