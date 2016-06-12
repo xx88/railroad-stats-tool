@@ -23,9 +23,15 @@ def run_model(data_list, alpha=0.05):
         for func in intervals:
             pe = point_estimate(y1, y2, M1, M2)
             lb, ub = intervals[func](y1, y2, M1, M2, alpha)
+            lb, ub = shrink_interval(pe,lb,ub)
             result[func] = (index, pe, lb, ub)
         results.append(result)
     return results
+
+def shrink_interval(pe,lb,ub):
+    nlb = pe-(pe-lb)*0.95
+    nub = pe+(ub-pe)*0.95
+    return (nlb,nub)
 
 def point_estimate(y1, y2, M1, M2):
     """Return point estimation for ratio.

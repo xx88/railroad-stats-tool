@@ -126,17 +126,17 @@ function drawChart(dataType) {
   data.addRows(chartData[dataType]);
 
   var options= {
-    title: "Estimate of " + dataType + " interval",
-    curveType: 'function',
+    //title: "Estimate of " + dataType + " interval",
+    //curveType: 'function',
     intervals: { style: 'bars' },
     legend: { position: 'bottom' },
     series: {
-      0: { type: 'steppedArea', areaOpacity: 0, lineDashStyle: [10, 2] },
+      0: { type: 'steppedArea', areaOpacity: 0, lineDashStyle: [10, 2], tooltip : false  },
       1: { pointSize: 8 }
     },
     chartArea: { width : '80%', height: '80%' },
     hAxis: { title: 'Labels' },
-    vAxis: { title: 'Estimated Values', minValue: 0 }
+    vAxis: { title: 'Ratio of Accident Rates', minValue: 0 }
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('div-chart'));
