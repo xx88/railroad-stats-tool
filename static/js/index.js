@@ -115,7 +115,7 @@ function fillResult(dataType) {
 function drawChart(dataType) {
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'x');
-  data.addColumn('number', 'Baseline');
+  data.addColumn('number', 'Reference');
   data.addColumn('number', 'Estimate');
   data.addColumn({id:'lb', type:'number', role:'interval'});
   data.addColumn({id:'ub', type:'number', role:'interval'});
