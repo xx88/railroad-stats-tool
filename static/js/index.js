@@ -134,12 +134,19 @@ function drawChart(dataType) {
       0: { type: 'steppedArea', areaOpacity: 0, lineDashStyle: [10, 2], tooltip : false  },
       1: { pointSize: 8 }
     },
-    chartArea: { width : '95%', height: '80%' },
-    hAxis: { title: 'Labels' },
-    vAxis: { title: 'Ratio of Accident Rates', minValue: 0 }
+    chartArea: { width : '90%', height: '80%' },
+    hAxis: { title: 'Years',titleFontSize:20,textStyle:{fontSize:20,bold: true} },
+    vAxis: { title: 'Ratio of Accident Rates',titleFontSize:20, minValue: 0,textStyle:{fontSize:20,bold: true} }
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('div-chart'));
+
+  var chart_div = document.getElementById('div-chart');
+  var chart = new google.visualization.LineChart(chart_div);
+
+  google.visualization.events.addListener(chart, 'ready', function () {
+        chart_div.innerHTML = '<img src="' + chart.getImageURI() + '">';
+        console.log(chart_div.innerHTML);
+      });
   chart.draw(data, options);
 }
 
